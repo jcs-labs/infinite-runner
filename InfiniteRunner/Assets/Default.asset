@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Default
   m_EditorClassIdentifier: Assembly-CSharp::JumpProfile
   arc:
-    jumpHeight: 3.5
-    timeToApex: 0.4
+    jumpHeight: 4
+    timeToApex: 0.5
     minJumpHeight: 1
   gravity:
-    fallGravityMult: 1.8
+    fallGravityMult: 1.5
     jumpCutMultiplier: 0.5
   assist:
     groundedTolerance: 0.1
   juice:
-    squashAndStretch: 0
-    jumpStretch: {x: 0.85, y: 1.15}
-    landSquash: {x: 1.15, y: 0.85}
-    recoverSpeed: 8
+    squashAndStretch: 1
+    jumpStretch: {x: 0.33, y: 3}
+    landSquash: {x: 2, y: 0.5}
+    recoverSpeed: 10
