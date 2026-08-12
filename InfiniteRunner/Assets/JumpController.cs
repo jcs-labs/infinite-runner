@@ -129,15 +129,19 @@ public class JumpController : MonoBehaviour
         OnJump?.Invoke();
     }
 
-    // Releasing jump early clips the upward velocity — but never below the speed
-    // needed to still reach minJumpHeight, so a tap always clears a real hop.
+    // Releasing jump early clips the upward velocity for a shorter hop. It must only
+    // ever REDUCE the rise: the minJumpHeight floor guarantees a tap still clears a
+    // real hop, but if we applied that floor while already rising slower than it, the
+    // "cut" would BOOST us — and mashing jump in mid-air would let you fly away.
     void ApplyJumpCut()
     {
         if (!isJumping || rb.linearVelocity.y <= 0f) return;
 
         float minCutVelocity = Mathf.Sqrt(2f * BaseGravity * profile.arc.minJumpHeight);
-        float cut = rb.linearVelocity.y * profile.gravity.jumpCutMultiplier;
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Max(cut, minCutVelocity));
+        if (rb.linearVelocity.y <= minCutVelocity) return; // already at/under the min hop — nothing to cut
+
+        float cut = Mathf.Max(rb.linearVelocity.y * profile.gravity.jumpCutMultiplier, minCutVelocity);
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, cut);
     }
 
     // Draws the ground-check box in the Scene view when this object is selected.
