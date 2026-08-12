@@ -30,11 +30,11 @@ public class JumpController : MonoBehaviour
     [Header("Input")]
     public KeyCode jumpKey = KeyCode.Space;
 
-    // ---- events other systems can subscribe to (decoupling) ----
+    // ---- events other systems can subscribe to ----
     public event Action OnJump;
     public event Action OnLand;
 
-    // ---- runtime STATE only (never tuning values) ----
+    // ---- runtime STATE
     Rigidbody2D rb;
     bool isGrounded;
     bool wasGrounded;
@@ -53,7 +53,6 @@ public class JumpController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
-        // Fallback so the component always works even before you make an asset.
         if (profile == null)
             profile = ScriptableObject.CreateInstance<JumpProfile>();
 
@@ -92,9 +91,6 @@ public class JumpController : MonoBehaviour
             if (h.CompareTag("Ground")) { touchingGround = true; break; }
         }
 
-        // Only count as grounded when we're NOT moving upward. Otherwise the box
-        // still overlaps the floor for a frame right after jumping and would
-        // instantly cancel the jump.
         isGrounded = touchingGround && rb.linearVelocity.y <= 0.01f;
 
         if (isGrounded)
