@@ -36,7 +36,12 @@
 
 # Visual Studio cache directory
 .vs/
-.vscode/
+
+# VS Code: ignore personal state, but share the workspace setup with the team.
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
 
 # Gradle cache directory
 .gradle/
