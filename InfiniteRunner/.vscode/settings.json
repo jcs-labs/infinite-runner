@@ -1,40 +1,30 @@
 {
-  // Point C# Dev Kit at Unity's solution so it never asks which one to load.
-  "dotnet.defaultSolution": "InfiniteRunner.sln",
-
-  // Unity regenerates these; editing them by hand does nothing.
-  "files.exclude": {
-    "**/Library": true,
-    "**/Temp": true,
-    "**/obj": true,
-    "**/Logs": true,
-    "**/UserSettings": true,
-    "**/*.meta": true,
-    "**/*.csproj": true,
-    "**/*.sln": true
-  },
-
-  // Library/ alone is tens of thousands of files - excluding it keeps
-  // search fast and stops the file watcher from pegging the CPU.
-  "search.exclude": {
-    "**/Library": true,
-    "**/Temp": true,
-    "**/obj": true,
-    "**/Logs": true
-  },
-  "files.watcherExclude": {
-    "**/Library/**": true,
-    "**/Temp/**": true,
-    "**/obj/**": true,
-    "**/Logs/**": true
-  },
-
-  "[csharp]": {
-    "editor.defaultFormatter": "ms-dotnettools.csharp",
-    "editor.formatOnSave": true,
-    "editor.tabSize": 4
-  },
-
-  "files.trimTrailingWhitespace": true,
-  "files.insertFinalNewline": true
+    "dotnet.defaultSolution": "InfiniteRunner.slnx",
+    "files.exclude": {
+        "**/Library": true,
+        "**/Temp": true,
+        "**/obj": true,
+        "**/Logs": true,
+        "**/UserSettings": true,
+        "**/*.meta": true
+    },
+    "search.exclude": {
+        "**/Library": true,
+        "**/Temp": true,
+        "**/obj": true,
+        "**/Logs": true
+    },
+    "files.watcherExclude": {
+        "**/Library/**": true,
+        "**/Temp/**": true,
+        "**/obj/**": true,
+        "**/Logs/**": true
+    },
+    "[csharp]": {
+        "editor.defaultFormatter": "ms-dotnettools.csharp",
+        "editor.formatOnSave": true,
+        "editor.tabSize": 4
+    },
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true
 }
