@@ -1,0 +1,30 @@
+{
+    "dotnet.defaultSolution": "InfiniteRunner.slnx",
+    "files.exclude": {
+        "**/Library": true,
+        "**/Temp": true,
+        "**/obj": true,
+        "**/Logs": true,
+        "**/UserSettings": true,
+        "**/*.meta": true
+    },
+    "search.exclude": {
+        "**/Library": true,
+        "**/Temp": true,
+        "**/obj": true,
+        "**/Logs": true
+    },
+    "files.watcherExclude": {
+        "**/Library/**": true,
+        "**/Temp/**": true,
+        "**/obj/**": true,
+        "**/Logs/**": true
+    },
+    "[csharp]": {
+        "editor.defaultFormatter": "ms-dotnettools.csharp",
+        "editor.formatOnSave": true,
+        "editor.tabSize": 4
+    },
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true
+}
