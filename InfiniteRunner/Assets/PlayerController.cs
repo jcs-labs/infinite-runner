@@ -1,41 +1,14 @@
 using UnityEngine;
 
+// Owns only the lose condition: detect the fatal hit and report it to the GameManager,
+// which owns what actually happens next (freeze, restart, and later score).
 public class PlayerController : MonoBehaviour
 {
-    public float jumpForce = 8f;
-    private Rigidbody2D rb;
-    private bool isGrounded = true;
-
-    void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();       
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-            isGrounded = false;
-        }
-        
-    }
-
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Obstacle"))
         {
-            isGrounded = true;
+            GameManager.Instance.GameOver();
         }
-        else if (collision.gameObject.CompareTag("Obstacle"))
-        {
-            GameOver();
-        }
-    }
-
-    void GameOver()
-    {
-        Debug.Log("Game Over!");
-        Time.timeScale = 0f;
     }
 }
