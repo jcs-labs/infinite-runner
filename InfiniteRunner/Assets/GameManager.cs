@@ -2,13 +2,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Owns game flow: whether the run is over, ending it, and restarting it.
+/// Owns game flow: game-over state, restart, and the score.
 /// PlayerController just reports the fatal collision here; this decides what happens.
 ///
 /// Two deliberate choices worth knowing:
 ///  - It self-bootstraps (see Bootstrap) so it needs no scene wiring or Inspector setup.
 ///  - It is NOT DontDestroyOnLoad. Restarting reloads the scene, which destroys and
-///    recreates this object, so every run starts from a clean slate for free.
+///    recreates this object, so the current score resets to zero for free. The BEST
+///    run has to outlive that reload, so it lives on disk in PlayerPrefs instead.
 /// </summary>
 public class GameManager : MonoBehaviour
 {
@@ -18,6 +19,16 @@ public class GameManager : MonoBehaviour
 
     [Tooltip("Key that restarts the run once you've lost.")]
     public KeyCode restartKey = KeyCode.R;
+
+    [Tooltip("Score gained per second survived.")]
+    public float pointsPerSecond = 10f;
+
+    const string BestRunKey = "BestRun";
+
+    // Accumulate in a float: each frame adds a fraction of a point, which would
+    // truncate to 0 forever in an int. We only convert to a whole number to show it.
+    float score;
+    int bestRun;
 
     // Spawn a GameManager after every scene load if one isn't already present.
     // Runs on first launch AND after each Restart() reload, with zero scene setup.
@@ -33,8 +44,19 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
+    void Start()
+    {
+        // Best run is the only thing that survives a restart, so read it from disk.
+        bestRun = PlayerPrefs.GetInt(BestRunKey, 0);
+    }
+
     void Update()
     {
+        // Time.deltaTime is 0 while frozen, so the score naturally stops climbing at
+        // game over; the IsGameOver guard just makes that intent explicit.
+        if (!IsGameOver)
+            score += Time.deltaTime * pointsPerSecond;
+
         // Input still fires while frozen: timeScale only halts time-based motion,
         // not Update or key polling. So we can watch for restart during the freeze.
         if (IsGameOver && Input.GetKeyDown(restartKey))
@@ -47,6 +69,14 @@ public class GameManager : MonoBehaviour
         if (IsGameOver) return;
         IsGameOver = true;
         Time.timeScale = 0f; // freeze everything (all time-based motion stops)
+
+        int finalScore = Mathf.FloorToInt(score);
+        if (finalScore > bestRun)
+        {
+            bestRun = finalScore;
+            PlayerPrefs.SetInt(BestRunKey, bestRun);
+            PlayerPrefs.Save(); // flush now so a crash can't lose the record
+        }
     }
 
     void Restart()
@@ -57,21 +87,25 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    // Rough on-screen prompt. A polished version would use a Canvas + TextMeshPro;
+    // Rough on-screen readout. A polished version would use a Canvas + TextMeshPro;
     // OnGUI needs no scene objects or fonts, so it works the instant you press Play.
     void OnGUI()
     {
+        var readout = new GUIStyle(GUI.skin.label) { fontSize = 24, fontStyle = FontStyle.Bold };
+        readout.normal.textColor = Color.white;
+        GUI.Label(new Rect(12, 8, 400, 30), $"Score: {Mathf.FloorToInt(score)}", readout);
+        GUI.Label(new Rect(12, 36, 400, 30), $"Best: {bestRun}", readout);
+
         if (!IsGameOver) return;
 
-        var style = new GUIStyle(GUI.skin.label)
+        var over = new GUIStyle(GUI.skin.label)
         {
             alignment = TextAnchor.MiddleCenter,
             fontSize = 32,
             fontStyle = FontStyle.Bold
         };
-        style.normal.textColor = Color.white;
-
+        over.normal.textColor = Color.white;
         GUI.Label(new Rect(0, Screen.height * 0.4f, Screen.width, 80),
-            $"GAME OVER\nPress {restartKey} to restart", style);
+            $"GAME OVER\nPress {restartKey} to restart", over);
     }
 }
