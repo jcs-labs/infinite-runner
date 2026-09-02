@@ -151,6 +151,8 @@ MonoBehaviour:
   obstaclePrefabs:
   - {fileID: 3843027820563590288, guid: 0d3146eed76374310b9014c09c7fdc50, type: 3}
   - {fileID: 3843027820563590288, guid: 8799732bee75d4a03bcf451d3951293e, type: 3}
+  - {fileID: 3843027820563590288, guid: 5dfa712d1af604250aff516ed98dc102, type: 3}
+  - {fileID: 3843027820563590288, guid: b32311912759b43d49e60911ec6950de, type: 3}
   scrollSpeed: 5
   spawnX: 15
   obstacleY: -2
